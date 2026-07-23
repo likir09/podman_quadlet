@@ -1,0 +1,148 @@
+---
+argument_specs:
+  main:
+    description: A role to install & configure a podman quadlet container
+    short_description: Deploy a podman quadlet container
+    version_added: 1.0.0
+    options:
+      podman_quadlet_container:
+        type: dict
+        description: The podman quadlet container specifications
+        default: {}
+        options:
+          name:
+            type: str
+            required: true
+            description: Name of the podman quadlet container
+          image_name:
+            type: str
+            required: true
+            description: Name of the podman/docker image to use
+          image_version:
+            type: str
+            required: true
+            description: Version/tag of the image to use
+          owner:
+            type: str
+            description: Owner of the podman quadlet container
+            default: "1000"
+          group:
+            type: str
+            description: Group of the podman quadlet container
+            default: "1000"
+          force_ownership:
+            type: bool
+            description: Force ownership inside the podman quadlet container
+            default: false
+          working_dir:
+            type: str
+            description: Working directory of the podman quadlet container
+          exec:
+            type: str
+            description: To override the exec command of the podman quadlet container
+          env:
+            type: dict
+            description: Environment variables configuration
+            options:
+              values:
+                type: dict
+                required: true
+                description: Environement variables specified as a dict
+              mode:
+                type: str
+                description: Mode of the .env file
+                default: "0600"
+              path:
+                type: str
+                description: Path of the .env file
+                default: /etc/{{ podman_quadlet_container.name }}/.env
+          file_mode:
+            type: str
+            description: Mode of the managed files
+            default: "0640"
+          dir_mode:
+            type: str
+            description: Mode of the managed directories
+            default: "0750"
+          add_capabilities:
+            type: list
+            elements: str
+            description: Capabilities to add to the podman container
+            default: []
+          drop_capabilities:
+            type: list
+            elements: str
+            description: Capabilities to drop to the podman container
+            default: []
+          ports:
+            type: list
+            elements: dict
+            description: Port mapping configuration
+            options:
+              host:
+                type: int
+                required: true
+                description: Port on the host-side
+              container:
+                type: int
+                required: true
+                description: Port on the container-side
+          volumes:
+            type: list
+            elements: dict
+            description: Managed volumes
+            default: []
+            options:
+              host_path:
+                type: str
+                required: true
+                description: Path on the host-side
+              container_path:
+                type: str
+                required: true
+                description: Path on the container-side
+              mode:
+                type: str
+                description: Mode of created volume on the host-side
+                default: "0750"
+              mount_mode:
+                type: str
+                description: Mount mode of the volume
+                default: rw
+              create:
+                type: bool
+                description: Create the volume on the host-side
+                default: false
+          files:
+            type: list
+            elements: dict
+            description: Managed files
+            default: []
+            options:
+              src:
+                type: str
+                required: true
+                description: Path of the file in the playbook
+              type:
+                type: str
+                required: true
+                description: Type of the file
+                choices:
+                  - file
+                  - template
+              host_path:
+                type: str
+                required: true
+                description: Path on the host-side
+              container_path:
+                type: str
+                required: true
+                description: Path on the container-side
+              mode:
+                type: str
+                description: Mode of created file on the host-side
+                default: "0640"
+              mount_mode:
+                type: str
+                description: Mount mode of the volume
+                default: rw

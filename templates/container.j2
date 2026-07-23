@@ -1,0 +1,38 @@
+[Unit]
+Description={{ _podman_quadlet_container.name }} container
+
+[Container]
+Image={{ _podman_quadlet_container.image_name }}:{{ _podman_quadlet_container.image_version }}
+{% if _podman_quadlet_container.exec is defined %}
+Exec={{ _podman_quadlet_container.exec }}
+{% endif %}
+{% if _podman_quadlet_container.force_ownership %}
+User={{ _podman_quadlet_container.owner }}
+Group={{ _podman_quadlet_container.group }}
+{% endif %}
+{% if _podman_quadlet_container.working_dir is defined %}
+WorkingDir={{ _podman_quadlet_container.working_dir }}
+{% endif %}
+{% if _podman_quadlet_container.add_capabilities | length > 0 %}
+AddCapability={% for capability in _podman_quadlet_container.add_capabilities %}{{ capability }} {% endfor %}
+
+{% endif %}
+{% if _podman_quadlet_container.drop_capabilities | length > 0 %}
+DropCapability={% for capability in _podman_quadlet_container.drop_capabilities %}{{ capability }} {% endfor %}
+
+{% endif %}
+{% for volume in (_podman_quadlet_container.volumes + _podman_quadlet_container.files) %}
+Volume={{ volume.host_path }}:{{ volume.container_path }}{{ ':' ~ volume.mount_mode if volume.mount_mode is defined }}
+{% endfor %}
+{% for port in _podman_quadlet_container.ports %}
+PublishPort={{ port.host }}:{{ port.container }}
+{% endfor %}
+{% if _podman_quadlet_container.env.values is defined %}
+EnvironmentFile={{ _podman_quadlet_container.env.path }}
+{% endif %}
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
