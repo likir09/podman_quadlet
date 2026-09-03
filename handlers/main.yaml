@@ -1,0 +1,8 @@
+---
+
+- name: Restart service
+  ansible.builtin.systemd:
+    name: "{{ _podman_quadlet_container.name }}"
+    state: restarted
+    daemon_reload: true
+    enabled: true

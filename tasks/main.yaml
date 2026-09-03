@@ -1,0 +1,16 @@
+---
+
+- name: Manage files
+  ansible.builtin.include_tasks: files.yaml
+  when: podman_quadlet_container.files is defined
+
+- name: Manage volumes
+  ansible.builtin.include_tasks: volumes.yaml
+  when: podman_quadlet_container.volumes is defined
+
+- name: Manage environment
+  ansible.builtin.include_tasks: env.yaml
+  when: podman_quadlet_container.env.values is defined
+
+- name: Install service
+  ansible.builtin.include_tasks: service.yaml

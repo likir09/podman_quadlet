@@ -1,0 +1,18 @@
+---
+_podman_quadlet_container_default:
+  owner: "1000"
+  group: "1000"
+  force_ownership: false
+  working_dir: /
+  env:
+    mode: "0600"
+    path: /etc/{{ podman_quadlet_container.name }}/.env
+  file_mode: "0640"
+  dir_mode: "0750"
+  ports: []
+  add_capabilities: []
+  drop_capabilities: []
+  volumes: []
+  files: []
+
+_podman_quadlet_container: "{{ _podman_quadlet_container_default | combine(podman_quadlet_container, recursive=true) }}"

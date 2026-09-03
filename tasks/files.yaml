@@ -1,0 +1,32 @@
+---
+
+- name: Create config directories
+  ansible.builtin.file:
+    path: "{{ item.host_path | dirname }}"
+    state: directory
+    owner: "{{ item.owner | default(_podman_quadlet_container.owner) }}"
+    group: "{{ item.group | default(_podman_quadlet_container.group) }}"
+    mode: "{{ _podman_quadlet_container.dir_mode }}"
+  loop: "{{ _podman_quadlet_container.files }}"
+
+- name: Copy files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.host_path }}"
+    owner: "{{ item.owner | default(_podman_quadlet_container.owner) }}"
+    group: "{{ item.group | default(_podman_quadlet_container.group) }}"
+    mode: "{{ item.mode | default(_podman_quadlet_container.file_mode) }}"
+  loop: "{{ _podman_quadlet_container.files }}"
+  when: item.type == 'file'
+  notify: Restart service
+
+- name: Copy templated files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.host_path }}"
+    owner: "{{ item.owner | default(_podman_quadlet_container.owner) }}"
+    group: "{{ item.group | default(_podman_quadlet_container.group) }}"
+    mode: "{{ item.mode | default(_podman_quadlet_container.file_mode) }}"
+  loop: "{{ _podman_quadlet_container.files }}"
+  when: item.type == 'template'
+  notify: Restart service

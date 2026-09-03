@@ -1,0 +1,15 @@
+---
+
+- name: Pull container image
+  containers.podman.podman_image:
+    name: "{{ _podman_quadlet_container.image_name }}"
+    tag: "{{ _podman_quadlet_container.image_version }}"
+
+- name: Install container {{ _podman_quadlet_container.name }}
+  ansible.builtin.template:
+    src: container.j2
+    dest: /etc/containers/systemd/{{ _podman_quadlet_container.name }}.container
+    owner: root
+    group: root
+    mode: "0640"
+  notify: Restart service

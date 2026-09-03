@@ -1,0 +1,12 @@
+---
+
+- name: Create volumes directories
+  ansible.builtin.file:
+    path: "{{ item.host_path }}"
+    state: directory
+    owner: "{{ item.owner | default(_podman_quadlet_container.owner) }}"
+    group: "{{ item.group | default(_podman_quadlet_container.group) }}"
+    mode: "{{ item.mode | default(_podman_quadlet_container.dir_mode) }}"
+  loop: "{{ _podman_quadlet_container.volumes }}"
+  when: item.create is defined and item.create
+  notify: Restart service
