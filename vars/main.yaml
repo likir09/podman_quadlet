@@ -3,7 +3,6 @@ _podman_quadlet_container_default:
   owner: "1000"
   group: "1000"
   force_ownership: false
-  working_dir: /
   env:
     mode: "0600"
     path: /etc/{{ podman_quadlet_container.name }}/.env
