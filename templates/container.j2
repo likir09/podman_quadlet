@@ -27,7 +27,7 @@ Volume={{ volume.host_path }}:{{ volume.container_path }}{{ ':' ~ volume.mount_m
 {% for port in _podman_quadlet_container.ports %}
 PublishPort={{ port.host }}:{{ port.container }}
 {% endfor %}
-{% if _podman_quadlet_container.env.values is defined %}
+{% if 'values' in _podman_quadlet_container.env %}
 EnvironmentFile={{ _podman_quadlet_container.env.path }}
 {% endif %}
 
